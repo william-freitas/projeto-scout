@@ -1,0 +1,58 @@
+-- 1. Criar o Banco de Dados
+CREATE DATABASE IF NOT EXISTS CampeonatoFutebol;
+USE CampeonatoFutebol;
+
+-- 2. Criar a tabela Championship (Campeonato)
+CREATE TABLE IF NOT EXISTS Championship (
+    champID INT AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    matchQuantity INT,
+    CONSTRAINT PK_Championship PRIMARY KEY (champID)
+);
+
+-- 3. Criar a tabela Team (Time)
+CREATE TABLE IF NOT EXISTS Team (
+    teamID INT AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    points INT DEFAULT 0,
+    matchesPlayed INT DEFAULT 0,
+    classification INT,
+    champId INT,
+    CONSTRAINT PK_Team PRIMARY KEY (teamID),
+    CONSTRAINT FK_Team_Championship FOREIGN KEY (champId) REFERENCES Championship(champID)
+);
+
+-- 4. Criar a tabela Player (Jogador)
+CREATE TABLE IF NOT EXISTS Player (
+    playerID INT AUTO_INCREMENT, -- Adicionado como PK para identificar o jogador
+    name VARCHAR(100) NOT NULL,
+    age INT,
+    team VARCHAR(100),
+    teamId INT,
+    position VARCHAR(50),
+    goals INT DEFAULT 0,
+    yellowCard INT DEFAULT 0,
+    redCard INT DEFAULT 0,
+    assists INT DEFAULT 0,
+    matchesPlayed INT DEFAULT 0,
+    CONSTRAINT PK_Player PRIMARY KEY (playerID),
+    CONSTRAINT FK_Player_Team FOREIGN KEY (teamId) REFERENCES Team(teamID)
+);
+
+-- 5. Criar a tabela Match (Partida)
+CREATE TABLE IF NOT EXISTS Match_Table ( -- "Match" é uma palavra reservada no SQL, mudado para Match_Table para evitar erros
+    matchID INT AUTO_INCREMENT,
+    teamHouse VARCHAR(100),
+    teamHouseID INT,
+    teamVisitor VARCHAR(100),
+    teamVisitorID INT,
+    championship VARCHAR(100),
+    champID INT,
+    goalHouse INT DEFAULT 0,
+    goalVisitor INT DEFAULT 0,
+    matchDate DATE, -- "Date" é palavra reservada, alterado para matchDate
+    CONSTRAINT PK_Match PRIMARY KEY (matchID),
+    CONSTRAINT FK_Match_TeamHouse FOREIGN KEY (teamHouseID) REFERENCES Team(teamID),
+    CONSTRAINT FK_Match_TeamVisitor FOREIGN KEY (teamVisitorID) REFERENCES Team(teamID),
+    CONSTRAINT FK_Match_Championship FOREIGN KEY (champID) REFERENCES Championship(champID)
+);
