@@ -16,31 +16,37 @@ public class PlayerService {
         return repository.findAll();
     }
 
+    public Player buscarPorId(Integer id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Jogador não encontrado com o ID: " + id));
+    }
+
     public Player salvar(Player player) {
-        // Regra de negócio simples: garante que novos jogadores não comecem com números negativos
-        if (player.getGoals() < 0) player.setGoals(0);
         return repository.save(player);
     }
 
-    public void deletar(Long id) {
-        repository.deleteById(id);
+    public Player atualizar(Integer id, Player playerAtualizado) {
+        return repository.findById(id).map(playerExistente -> {
+            playerExistente.setName(playerAtualizado.getName());
+            playerExistente.setAge(playerAtualizado.getAge());
+            playerExistente.setTeam(playerAtualizado.getTeam()); // Nome do time em texto
+            playerExistente.setPosition(playerAtualizado.getPosition());
+            playerExistente.setGoals(playerAtualizado.getGoals());
+            playerExistente.setYellowCard(playerAtualizado.getYellowCard());
+            playerExistente.setRedCard(playerAtualizado.getRedCard());
+            playerExistente.setAssists(playerAtualizado.getAssists());
+            playerExistente.setMatchesPlayed(playerAtualizado.getMatchesPlayed());
+            
+            // Atualiza o vínculo com a entidade Time se enviado
+            if (playerAtualizado.getTeamEntity() != null) {
+                playerExistente.setTeamEntity(playerAtualizado.getTeamEntity());
+            }
+            
+            return repository.save(playerExistente);
+        }).orElseThrow(() -> new RuntimeException("Jogador não encontrado com o ID: " + id));
     }
 
-    public Player atualizar(Long id, Player playerAtualizado) {
-    // Busca o jogador atual no banco. Se não achar, lança um erro.
-    return repository.findById(id).map(playerExistente -> {
-        // Atualiza apenas os campos permitidos
-        playerExistente.setName(playerAtualizado.getName());
-        playerExistente.setPosition(playerAtualizado.getPosition());
-        playerExistente.setTeam(playerAtualizado.getTeam());
-        playerExistente.setGoals(playerAtualizado.getGoals());
-        playerExistente.setAssists(playerAtualizado.getAssists());
-        playerExistente.setMatchesPlayed(playerAtualizado.getMatchesPlayed());
-        
-        // Salva o jogador com os dados novos
-        return repository.save(playerExistente);
-    }).orElseThrow(() -> new RuntimeException("Jogador não encontrado com o ID: " + id));
+    public void deletar(Integer id) {
+        repository.deleteById(id);
+    }
 }
-
-}
-

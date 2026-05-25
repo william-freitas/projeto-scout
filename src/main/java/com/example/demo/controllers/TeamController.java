@@ -1,37 +1,37 @@
 package com.example.demo.controllers;
 
-import com.example.demo.entities.Player;
-import com.example.demo.services.PlayerService;
+import com.example.demo.entities.Team;
+import com.example.demo.services.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/players")
+@RequestMapping("/api/teams")
 @CrossOrigin(origins = "*") // Permite acesso do front mobile em Kotlin
-public class PlayerController {
+public class TeamController {
 
     @Autowired
-    private PlayerService service;
+    private TeamService service;
 
     @GetMapping
-    public List<Player> getAll() {
+    public List<Team> getAll() {
         return service.listarTodos();
     }
 
     @GetMapping("/{id}")
-    public Player getById(@PathVariable Integer id) {
+    public Team getById(@PathVariable Integer id) {
         return service.buscarPorId(id);
     }
 
     @PostMapping
-    public Player create(@RequestBody Player player) {
-        return service.salvar(player);
+    public Team create(@RequestBody Team team) {
+        return service.salvar(team);
     }
 
     @PutMapping("/{id}")
-    public Player update(@PathVariable Integer id, @RequestBody Player player) {
-        return service.atualizar(id, player);
+    public Team update(@PathVariable Integer id, @RequestBody Team team) {
+        return service.atualizar(id, team);
     }
 
     @DeleteMapping("/{id}")

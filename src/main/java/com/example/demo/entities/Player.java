@@ -4,18 +4,28 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
+@Table(name = "Player")
 @Data
 public class Player {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "playerID")
+    private Integer playerId;
+
+    @Column(nullable = false, length = 100)
     private String name;
+
     private Integer age;
+    private String team; // Mantido o campo de texto do seu script
     private String position;
-    private String team;
     private Integer goals = 0;
+    private Integer yellowCard = 0;
+    private Integer redCard = 0;
     private Integer assists = 0;
     private Integer matchesPlayed = 0;
-    private Integer yellowCards = 0;
-    private Integer redCards = 0;
+
+    @ManyToOne
+    @JoinColumn(name = "teamId") // Nome exato da FK do seu script
+    private Team teamEntity; 
 }

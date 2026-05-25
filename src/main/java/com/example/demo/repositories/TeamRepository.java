@@ -1,0 +1,10 @@
+package com.example.demo.repositories;
+
+import com.example.demo.entities.Team;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface TeamRepository extends JpaRepository<Team, Integer> {
+    // CRUD básico injetado automaticamente para a tabela Team
+}
