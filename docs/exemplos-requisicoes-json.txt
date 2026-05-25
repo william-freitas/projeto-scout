@@ -1,0 +1,43 @@
+coisas importantes para lembrar projeto lab banco de dados:
+
+exemplo de json do front kotlin para um time:
+
+{
+  "name": "Santos FC",
+  "points": 0,
+  "matchesPlayed": 0,
+  "classification": 1,
+  "championship": {
+    "champId": 1
+  }
+}
+
+exemplo de json do front kotlin para uma partida:
+{
+  "teamHouse": "Santos FC",
+  "teamVisitor": "Flamengo",
+  "championship": "Brasileirão",
+  "goalHouse": 2,
+  "goalVisitor": 1,
+  "matchDate": "2026-05-25",
+  "teamHouseEntity": { "teamId": 1 },
+  "teamVisitorEntity": { "teamId": 2 },
+  "championshipEntity": { "champId": 1 }
+}
+
+exemplo de json do front kotlin para um jogador:
+{
+  "name": "Neymar Jr",
+  "age": 32,
+  "team": "Al-Hilal",
+  "position": "Atacante",
+  "goals": 0,
+  "yellowCard": 0,
+  "redCard": 0,
+  "assists": 0,
+  "matchesPlayed": 0,
+  "teamEntity": {
+    "teamId": 1
+  }
+}
+
