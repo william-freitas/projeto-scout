@@ -1,155 +1,83 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Draft Player - Liga das Fatecs</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        liga: {
-                            bg: '#2d1418', // Fundo escuro avermelhado
-                            card: '#3a1b22', // Fundo do formulário
-                            red: '#e11d48', // Vermelho vibrante
-                            redHover: '#be123c'
-                        }
-                    }
-                }
-            }
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+
+// Definição de Cores da Liga
+val LigaRed = Color(0xFFE11D48)
+val LigaBg = Color(0xFF2D1418)
+
+@Composable
+fun ScoutScreen() {
+    var nome by remember { mutableStateOf("") }
+    var finalizacao by remember { mutableFloatStateOf(3f) }
+    var velocidade by remember { mutableFloatStateOf(3f) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF1A0C0F))
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
+        // Cabeçalho
+        Text("SCOUT ATLETA", fontSize = 24.sp, fontWeight = FontWeight.Black, color = Color.White)
+        Text("Avaliação técnica oficial", fontSize = 12.sp, color = Color.White.copy(alpha = 0.5f))
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Input Nome
+        OutlinedTextField(
+            value = nome,
+            onValueChange = { nome = it },
+            label = { Text("Nome do Atleta") },
+            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.colors(focusedContainerColor = LigaBg, unfocusedContainerColor = LigaBg)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Skill: Finalização
+        SkillSlider("Finalização", finalizacao) { finalizacao = it }
+
+        // Skill: Velocidade
+        SkillSlider("Velocidade", velocidade) { velocidade = it }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Botão Finalizar
+        Button(
+            onClick = { /* Lógica de envio para o Backend Java */ },
+            modifier = Modifier.fillMaxWidth().height(50.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = LigaRed)
+        ) {
+            Text("FINALIZAR CADASTRO", fontWeight = FontWeight.Bold)
         }
-    </script>
-    <style>
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
+    }
+}
+
+@Composable
+fun SkillSlider(label: String, value: Float, onValueChange: (Float) -> Unit) {
+    Column(modifier = Modifier.padding(vertical = 8.dp)) {
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Text(label, color = Color.White, fontSize = 14.sp)
+            Text(value.toInt().toString(), color = LigaRed, fontWeight = FontWeight.Bold)
         }
-        /* Customizando a barra de rolagem para ficar mais elegante */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: #e11d48; border-radius: 4px; }
-    </style>
-</head>
-<body class="bg-zinc-950 text-slate-100 min-h-screen flex items-center justify-center sm:p-4 font-sans relative">
-
-    <div class="bg-liga-bg w-full max-w-md min-h-screen sm:min-h-[800px] sm:rounded-[2rem] shadow-2xl flex flex-col relative overflow-hidden border border-white/5">
-        
-        <div class="absolute top-0 left-0 w-full h-64 bg-liga-red opacity-20 blur-[80px] pointer-events-none"></div>
-
-        <div class="px-5 py-4 flex items-center justify-between z-10 border-b border-white/10">
-            <div class="text-liga-red">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm0 2.18l6 2.25v4.66c0 3.99-2.3 7.68-6 8.78-3.7-1.1-6-4.79-6-8.78V6.43l6-2.25z"/></svg>
-            </div>
-            
-            <div class="flex gap-2">
-                <button class="bg-liga-red text-white text-xs font-semibold px-3 py-1.5 rounded-md flex items-center gap-1 transition active:scale-95">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                    Calendário
-                </button>
-                <button class="bg-white text-zinc-900 text-xs font-semibold px-3 py-1.5 rounded-md flex items-center gap-1 transition active:scale-95">
-                    Entrar
-                </button>
-            </div>
-        </div>
-
-        <div class="px-6 pt-6 pb-2 z-10 text-center">
-            <h1 class="text-3xl font-black tracking-tight text-white uppercase">
-                Cadastro de<br>
-                <span class="text-liga-red">Novo Atleta</span>
-            </h1>
-            <p class="text-xs text-white/60 mt-2">Junte-se à Liga Atlética das Fatecs</p>
-        </div>
-
-        <form id="playerForm" class="flex-1 px-6 py-4 space-y-5 z-10 overflow-y-auto">
-            
-            <div>
-                <label for="name" class="block text-[11px] font-bold uppercase tracking-wider text-white/70 mb-1.5">Nome Completo</label>
-                <input type="text" id="name" required placeholder="Ex: Luana Ramos"
-                    class="w-full px-4 py-3.5 bg-black/30 border border-white/10 rounded-xl focus:outline-none focus:border-liga-red focus:bg-black/50 text-white placeholder-white/30 transition text-sm">
-            </div>
-
-            <div>
-                <label for="age" class="block text-[11px] font-bold uppercase tracking-wider text-white/70 mb-1.5">Idade</label>
-                <input type="number" id="age" min="16" max="50" required placeholder="Ex: 19" inputmode="numeric"
-                    class="w-full px-4 py-3.5 bg-black/30 border border-white/10 rounded-xl focus:outline-none focus:border-liga-red focus:bg-black/50 text-white placeholder-white/30 transition text-sm">
-            </div>
-
-            <div>
-                <label for="team" class="block text-[11px] font-bold uppercase tracking-wider text-white/70 mb-1.5">Atlética / Clube Atual</label>
-                <div class="relative">
-                    <select id="team" required
-                        class="w-full px-4 py-3.5 bg-black/30 border border-white/10 rounded-xl focus:outline-none focus:border-liga-red focus:bg-black/50 text-white transition text-sm appearance-none cursor-pointer">
-                        <option value="" disabled selected class="text-zinc-900">Selecione sua Atlética...</option>
-                        <option value="Fatec SP" class="text-zinc-900">Fatec São Paulo</option>
-                        <option value="Fatec Santos" class="text-zinc-900">Fatec Santos</option>
-                        <option value="Fatec Sorocaba" class="text-zinc-900">Fatec Sorocaba</option>
-                        <option value="Fatec SJC" class="text-zinc-900">Fatec São José dos Campos</option>
-                        <option value="Agente Livre" class="text-zinc-900">Sem Atlética no momento</option>
-                    </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-white/50">
-                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-[11px] font-bold uppercase tracking-wider text-white/70 mb-1.5">Posição Preferencial</label>
-                <div class="grid grid-cols-2 gap-2">
-                    
-                    <label class="relative flex items-center justify-center py-3 bg-black/30 border border-white/10 rounded-xl cursor-pointer select-none active:scale-95 transition-all has-[:checked]:border-liga-red has-[:checked]:bg-liga-red/20 text-white/70 has-[:checked]:text-white">
-                        <input type="radio" name="position" value="Goleiro(a)" required class="sr-only">
-                        <span class="text-xs font-bold tracking-wide">Goleiro(a)</span>
-                    </label>
-
-                    <label class="relative flex items-center justify-center py-3 bg-black/30 border border-white/10 rounded-xl cursor-pointer select-none active:scale-95 transition-all has-[:checked]:border-liga-red has-[:checked]:bg-liga-red/20 text-white/70 has-[:checked]:text-white">
-                        <input type="radio" name="position" value="Fixo" required class="sr-only">
-                        <span class="text-xs font-bold tracking-wide">Fixo(a) / Zaga</span>
-                    </label>
-
-                    <label class="relative flex items-center justify-center py-3 bg-black/30 border border-white/10 rounded-xl cursor-pointer select-none active:scale-95 transition-all has-[:checked]:border-liga-red has-[:checked]:bg-liga-red/20 text-white/70 has-[:checked]:text-white">
-                        <input type="radio" name="position" value="Ala" required class="sr-only">
-                        <span class="text-xs font-bold tracking-wide">Ala / Lateral</span>
-                    </label>
-
-                    <label class="relative flex items-center justify-center py-3 bg-black/30 border border-white/10 rounded-xl cursor-pointer select-none active:scale-95 transition-all has-[:checked]:border-liga-red has-[:checked]:bg-liga-red/20 text-white/70 has-[:checked]:text-white">
-                        <input type="radio" name="position" value="Pivô" required class="sr-only">
-                        <span class="text-xs font-bold tracking-wide">Pivô / Ataque</span>
-                    </label>
-
-                </div>
-            </div>
-        </form>
-
-        <div class="p-6 pt-4 bg-liga-bg border-t border-white/5 z-10">
-            <button type="submit" form="playerForm"
-                class="w-full py-4 bg-liga-red hover:bg-liga-redHover text-white font-black text-sm rounded-xl shadow-[0_0_15px_rgba(225,29,72,0.4)] transition transform active:scale-[0.98] tracking-widest uppercase flex items-center justify-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                Finalizar Cadastro
-            </button>
-        </div>
-
-    </div>
-
-    <script>
-        document.getElementById('playerForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const atleta = {
-                nome: document.getElementById('name').value,
-                idade: parseInt(document.getElementById('age').value),
-                atletica: document.getElementById('team').value,
-                posicao: document.querySelector('input[name="position"]:checked').value
-            };
-
-            console.log('Dados prontos para envio:', atleta);
-            
-            // Alerta visual mais bonito pode ser implementado depois, usando alert nativo por enquanto
-            alert(`Bem-vindo(a) à Liga, ${atleta.nome}!\nPosição: ${atleta.posicao}`);
-            
-            this.reset();
-        });
-    </script>
-</body>
-</html>
+        Slider(
+            value = value,
+            onValueChange = onValueChange,
+            valueRange = 1f..5f,
+            steps = 3,
+            colors = SliderDefaults.colors(thumbColor = LigaRed, activeTrackColor = LigaRed)
+        )
+    }
+}
