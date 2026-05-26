@@ -1,58 +1,59 @@
--- 1. Criar o Banco de Dados
-CREATE DATABASE IF NOT EXISTS CampeonatoFutebol;
-USE CampeonatoFutebol;
+-- 1. Inserir 1 Campeonato
+INSERT INTO Championship (name, matchQuantity) 
+SELECT 'Campeonato Brasileiro', 38 WHERE NOT EXISTS (SELECT 1 FROM Championship WHERE champID = 1);
 
--- 2. Criar a tabela Championship (Campeonato)
-CREATE TABLE IF NOT EXISTS Championship (
-    champID INT AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL,
-    matchQuantity INT,
-    CONSTRAINT PK_Championship PRIMARY KEY (champID)
-);
+-- 2. Inserir 10 Times Brasileiros
+INSERT INTO Team (name, points, matchesPlayed, classification, champId) 
+SELECT 'Palmeiras', 0, 0, 1, 1 WHERE NOT EXISTS (SELECT 1 FROM Team WHERE teamID = 1);
+INSERT INTO Team (name, points, matchesPlayed, classification, champId) 
+SELECT 'Flamengo', 0, 0, 2, 1 WHERE NOT EXISTS (SELECT 1 FROM Team WHERE teamID = 2);
+INSERT INTO Team (name, points, matchesPlayed, classification, champId) 
+SELECT 'Atlético-MG', 0, 0, 3, 1 WHERE NOT EXISTS (SELECT 1 FROM Team WHERE teamID = 3);
+INSERT INTO Team (name, points, matchesPlayed, classification, champId) 
+SELECT 'Fluminense', 0, 0, 4, 1 WHERE NOT EXISTS (SELECT 1 FROM Team WHERE teamID = 4);
+INSERT INTO Team (name, points, matchesPlayed, classification, champId) 
+SELECT 'Botafogo', 0, 0, 5, 1 WHERE NOT EXISTS (SELECT 1 FROM Team WHERE teamID = 5);
+INSERT INTO Team (name, points, matchesPlayed, classification, champId) 
+SELECT 'Grêmio', 0, 0, 6, 1 WHERE NOT EXISTS (SELECT 1 FROM Team WHERE teamID = 6);
+INSERT INTO Team (name, points, matchesPlayed, classification, champId) 
+SELECT 'Athletico-PR', 0, 0, 7, 1 WHERE NOT EXISTS (SELECT 1 FROM Team WHERE teamID = 7);
+INSERT INTO Team (name, points, matchesPlayed, classification, champId) 
+SELECT 'São Paulo', 0, 0, 8, 1 WHERE NOT EXISTS (SELECT 1 FROM Team WHERE teamID = 8);
+INSERT INTO Team (name, points, matchesPlayed, classification, champId) 
+SELECT 'Internacional', 0, 0, 9, 1 WHERE NOT EXISTS (SELECT 1 FROM Team WHERE teamID = 9);
+INSERT INTO Team (name, points, matchesPlayed, classification, champId) 
+SELECT 'Fortaleza', 0, 0, 10, 1 WHERE NOT EXISTS (SELECT 1 FROM Team WHERE teamID = 10);
 
--- 3. Criar a tabela Team (Time)
-CREATE TABLE IF NOT EXISTS Team (
-    teamID INT AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL,
-    points INT DEFAULT 0,
-    matchesPlayed INT DEFAULT 0,
-    classification INT,
-    champId INT,
-    CONSTRAINT PK_Team PRIMARY KEY (teamID),
-    CONSTRAINT FK_Team_Championship FOREIGN KEY (champId) REFERENCES Championship(champID)
-);
+-- 3. Inserir 10 Jogadores de modelo (Corrigido para os nomes de colunas gerados pelo JPA/Hibernate)
+INSERT INTO Player (name, age, team, position, goals, yellow_cards, red_cards, assists, matches_played) 
+SELECT 'Raphael Veiga', 28, 'Palmeiras', 'Meio-Campo', 3, 1, 0, 2, 4 WHERE NOT EXISTS (SELECT 1 FROM Player WHERE id = 1);
+INSERT INTO Player (name, age, team, position, goals, yellow_cards, red_cards, assists, matches_played) 
+SELECT 'Pedro', 26, 'Flamengo','Atacante', 5, 0, 0, 1, 4 WHERE NOT EXISTS (SELECT 1 FROM Player WHERE id = 2);
+INSERT INTO Player (name, age, team, position, goals, yellow_cards, red_cards, assists, matches_played) 
+SELECT 'Hulk', 37, 'Atlético-MG','Atacante', 2, 2, 0, 3, 4 WHERE NOT EXISTS (SELECT 1 FROM Player WHERE id = 3);
+INSERT INTO Player (name, age, team, position, goals, yellow_cards, red_cards, assists, matches_played) 
+SELECT 'Ganso', 34, 'Fluminense', 'Meio-Campo', 1, 1, 0, 4, 3 WHERE NOT EXISTS (SELECT 1 FROM Player WHERE id = 4);
+INSERT INTO Player (name, age, team, position, goals, yellow_cards, red_cards, assists, matches_played) 
+SELECT 'Tiquinho Soares', 33, 'Botafogo', 'Atacante', 4, 0, 0, 0, 4 WHERE NOT EXISTS (SELECT 1 FROM Player WHERE id = 5);
+INSERT INTO Player (name, age, team, position, goals, yellow_cards, red_cards, assists, matches_played) 
+SELECT 'Yeferson Soteldo', 26, 'Grêmio', 'Atacante', 1, 1, 0, 2, 3 WHERE NOT EXISTS (SELECT 1 FROM Player WHERE id = 6);
+INSERT INTO Player (name, age, team, position, goals, yellow_cards, red_cards, assists, matches_played) 
+SELECT 'Pablo', 31, 'Athletico-PR', 'Atacante', 2, 0, 0, 1, 4 WHERE NOT EXISTS (SELECT 1 FROM Player WHERE id = 7);
+INSERT INTO Player (name, age, team, position, goals, yellow_cards, red_cards, assists, matches_played) 
+SELECT 'Jonathan Calleri', 30, 'São Paulo', 'Atacante', 3, 2, 0, 0, 4 WHERE NOT EXISTS (SELECT 1 FROM Player WHERE id = 8);
+INSERT INTO Player (name, age, team, position, goals, yellow_cards, red_cards, assists, matches_played) 
+SELECT 'Alan Patrick', 33, 'Internacional', 'Meio-Campo', 2, 0, 0, 3, 4 WHERE NOT EXISTS (SELECT 1 FROM Player WHERE id = 9);
+INSERT INTO Player (name, age, team, position, goals, yellow_cards, red_cards, assists, matches_played) 
+SELECT 'Juan Martín Lucero', 32, 'Fortaleza', 'Atacante', 3, 1, 0, 1, 4 WHERE NOT EXISTS (SELECT 1 FROM Player WHERE id = 10);
 
--- 4. Criar a tabela Player (Jogador)
-CREATE TABLE IF NOT EXISTS Player (
-    playerID INT AUTO_INCREMENT, -- Adicionado como PK para identificar o jogador
-    name VARCHAR(100) NOT NULL,
-    age INT,
-    team VARCHAR(100),
-    teamId INT,
-    position VARCHAR(50),
-    goals INT DEFAULT 0,
-    yellowCard INT DEFAULT 0,
-    redCard INT DEFAULT 0,
-    assists INT DEFAULT 0,
-    matchesPlayed INT DEFAULT 0,
-    CONSTRAINT PK_Player PRIMARY KEY (playerID),
-    CONSTRAINT FK_Player_Team FOREIGN KEY (teamId) REFERENCES Team(teamID)
-);
-
--- 5. Criar a tabela Match (Partida)
-CREATE TABLE IF NOT EXISTS Match_Table ( -- "Match" é uma palavra reservada no SQL, mudado para Match_Table para evitar erros
-    matchID INT AUTO_INCREMENT,
-    teamHouse VARCHAR(100),
-    teamHouseID INT,
-    teamVisitor VARCHAR(100),
-    teamVisitorID INT,
-    championship VARCHAR(100),
-    champID INT,
-    goalHouse INT DEFAULT 0,
-    goalVisitor INT DEFAULT 0,
-    matchDate DATE, -- "Date" é palavra reservada, alterado para matchDate
-    CONSTRAINT PK_Match PRIMARY KEY (matchID),
-    CONSTRAINT FK_Match_TeamHouse FOREIGN KEY (teamHouseID) REFERENCES Team(teamID),
-    CONSTRAINT FK_Match_TeamVisitor FOREIGN KEY (teamVisitorID) REFERENCES Team(teamID),
-    CONSTRAINT FK_Match_Championship FOREIGN KEY (champID) REFERENCES Championship(champID)
-);
+-- 4. Inserir 5 Jogos
+INSERT INTO Match_Table (teamHouse, teamHouseID, teamVisitor, teamVisitorID, championship, champID, goalHouse, goalVisitor, matchDate) 
+SELECT 'Palmeiras', 1, 'Flamengo', 2, 'Campeonato Brasileiro', 1, 2, 1, '2026-05-20' WHERE NOT EXISTS (SELECT 1 FROM Match_Table WHERE matchID = 1);
+INSERT INTO Match_Table (teamHouse, teamHouseID, teamVisitor, teamVisitorID, championship, champID, goalHouse, goalVisitor, matchDate) 
+SELECT 'Atlético-MG', 3, 'Fluminense', 4, 'Campeonato Brasileiro', 1, 0, 0, '2026-05-20' WHERE NOT EXISTS (SELECT 1 FROM Match_Table WHERE matchID = 2);
+INSERT INTO Match_Table (teamHouse, teamHouseID, teamVisitor, teamVisitorID, championship, champID, goalHouse, goalVisitor, matchDate) 
+SELECT 'Botafogo', 5, 'Grêmio', 6, 'Campeonato Brasileiro', 1, 1, 3, '2026-05-21' WHERE NOT EXISTS (SELECT 1 FROM Match_Table WHERE matchID = 3);
+INSERT INTO Match_Table (teamHouse, teamHouseID, teamVisitor, teamVisitorID, championship, champID, goalHouse, goalVisitor, matchDate) 
+SELECT 'Athletico-PR', 7, 'São Paulo', 8, 'Campeonato Brasileiro', 1, 2, 2, '2026-05-21' WHERE NOT EXISTS (SELECT 1 FROM Match_Table WHERE matchID = 4);
+INSERT INTO Match_Table (teamHouse, teamHouseID, teamVisitor, teamVisitorID, championship, champID, goalHouse, goalVisitor, matchDate) 
+SELECT 'Internacional', 9, 'Fortaleza', 10, 'Campeonato Brasileiro', 1, 1, 0, '2026-05-22' WHERE NOT EXISTS (SELECT 1 FROM Match_Table WHERE matchID = 5);

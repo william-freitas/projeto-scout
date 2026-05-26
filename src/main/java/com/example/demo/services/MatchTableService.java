@@ -52,4 +52,13 @@ public class MatchTableService {
     public void deletar(Integer id) {
         repository.deleteById(id);
     }
+
+    public void processarPontosPartida(Integer matchId) {
+    // Verifica se a partida realmente existe antes de chamar a procedure
+    if (!repository.existsById(matchId)) {
+        throw new RuntimeException("Partida não encontrada para computar pontos.");
+    }
+    // Dispara a stored procedure do MySQL
+    repository.computarPartidaNoBanco(matchId);
+}
 }

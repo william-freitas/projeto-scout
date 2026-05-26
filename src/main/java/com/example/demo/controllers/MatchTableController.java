@@ -38,4 +38,11 @@ public class MatchTableController {
     public void delete(@PathVariable Integer id) {
         service.deletar(id);
     }
+
+    @PostMapping("/{id}/compute")
+    public String computeMatch(@PathVariable Integer id) {
+    service.processarPontosPartida(id);
+    return "Pontos dos times atualizados.";
+    }
+
 }
