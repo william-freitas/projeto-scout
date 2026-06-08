@@ -1,0 +1,13 @@
+Podemos por favor fazer uma tela adequada ao backend !?
+
+talvez esses exemplos de requisições se estiverem corretos podem ajudar !!! pois eu preciso:
+
+-> que essa tela seja funcional ! receba os dados e avance para o backend para persistir os dados !
+
+-> a tela precisa ter o CRUD completo: inserir, alterar, excluir e consultar !
+-> se possivel, relatorio de dados !!!
+
+-> eu ja tenho uma procedure pronta. gostaria de mostrá-la no front quando executada! (isso é um relatório de dados!?) 
+
+
+pode me ajudar com isso !?!?!?
