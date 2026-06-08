@@ -20,9 +20,12 @@ public class Player {
     private String team; // Mantido o campo de texto do seu script
     private String position;
     private Integer goals = 0;
+    @Column(name = "yellowCard")
     private Integer yellowCard = 0;
+    @Column(name = "redCard")
     private Integer redCard = 0;
     private Integer assists = 0;
+    @Column(name = "matchesPlayed")
     private Integer matchesPlayed = 0;
 
     @ManyToOne

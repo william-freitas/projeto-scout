@@ -14,12 +14,17 @@ public class MatchTable {
     @Column(name = "matchID")
     private Integer matchId;
 
+    @Column(name = "teamHouse")
     private String teamHouse;
+    @Column(name = "teamVisitor")
     private String teamVisitor;
     private String championship;
 
+    @Column(name = "goalHouse")
     private Integer goalHouse = 0;
+    @Column(name = "goalVisitor")
     private Integer goalVisitor = 0;
+    @Column(name = "matchDate")
     private LocalDate matchDate;
 
     @ManyToOne

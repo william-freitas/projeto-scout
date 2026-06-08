@@ -17,10 +17,11 @@ public class Team {
     private String name;
 
     private Integer points = 0;
+    @Column(name = "matchesPlayed")
     private Integer matchesPlayed = 0;
     private Integer classification;
 
     @ManyToOne
-    @JoinColumn(name = "champId") // Nome exato da FK do seu script
+    @JoinColumn(name = "champId", referencedColumnName = "champID") // Nome exato da FK do seu script
     private Championship championship;
 }

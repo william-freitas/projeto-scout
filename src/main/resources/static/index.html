@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Campeonato de Futebol</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f9f9f9; color: #222; }
+        h1, h2 { color: #1b3a6b; }
+        .section { background: #fff; border: 1px solid #ddd; padding: 18px; margin-bottom: 20px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .section h2 { margin-top: 0; }
+        .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+        label { font-weight: bold; display: block; margin-bottom: 4px; }
+        input, select, button, textarea { width: 100%; box-sizing: border-box; padding: 10px; margin-top: 4px; border: 1px solid #bbb; border-radius: 4px; }
+        button { width: auto; cursor: pointer; background: #1b3a6b; color: white; border: none; transition: background .2s ease; }
+        button:hover { background: #16305a; }
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background: #eef2f8; }
+        .inline-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
+        .inline-row > * { flex: 1; min-width: 180px; }
+        .result-area { min-height: 160px; white-space: pre-wrap; background: #f4f7fb; padding: 14px; border-radius: 6px; border: 1px solid #d8e2ef; overflow-x: auto; }
+        .error { color: #9b1c1c; font-weight: bold; }
+        .success { color: #1f6a21; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Campeonato de Futebol</h1>
+
+    <div class="section">
+        <h2>Menu rápido</h2>
+        <div class="inline-row">
+            <button type="button" onclick="listarCampeonatos()">Listar Campeonatos</button>
+            <button type="button" onclick="listarTimes()">Listar Times</button>
+            <button type="button" onclick="listarJogadores()">Listar Jogadores</button>
+            <button type="button" onclick="listarPartidas()">Listar Partidas</button>
+            <button type="button" onclick="mostrarRelatorio()">Relatório</button>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Cadastro / Atualização de Campeonato</h2>
+        <div class="grid">
+            <div>
+                <label for="champIdInput">ID (para atualizar/excluir)</label>
+                <input id="champIdInput" type="number" min="1" placeholder="ID Campeonato" />
+            </div>
+            <div>
+                <label for="champNameInput">Nome do Campeonato</label>
+                <input id="champNameInput" type="text" placeholder="Nome do Campeonato" />
+            </div>
+            <div>
+                <label for="champMatchQuantityInput">Quantidade de Partidas</label>
+                <input id="champMatchQuantityInput" type="number" min="0" placeholder="Quantidade de Partidas" />
+            </div>
+        </div>
+        <div class="inline-row" style="margin-top:12px;">
+            <button type="button" onclick="criarCampeonato()">Criar Campeonato</button>
+            <button type="button" onclick="atualizarCampeonato()">Atualizar Campeonato</button>
+            <button type="button" onclick="excluirCampeonato()">Excluir Campeonato</button>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Cadastro / Atualização de Time</h2>
+        <div class="grid">
+            <div>
+                <label for="teamIdInput">ID do Time (para atualizar/excluir)</label>
+                <input id="teamIdInput" type="number" min="1" placeholder="ID do Time" />
+            </div>
+            <div>
+                <label for="teamNameInput">Nome do Time</label>
+                <input id="teamNameInput" type="text" placeholder="Nome do Time" />
+            </div>
+            <div>
+                <label for="teamPointsInput">Pontos</label>
+                <input id="teamPointsInput" type="number" min="0" value="0" />
+            </div>
+            <div>
+                <label for="teamMatchesInput">Jogos Disputados</label>
+                <input id="teamMatchesInput" type="number" min="0" value="0" />
+            </div>
+            <div>
+                <label for="teamClassificationInput">Classificação</label>
+                <input id="teamClassificationInput" type="number" min="0" value="0" />
+            </div>
+            <div>
+                <label for="teamChampSelect">Campeonato</label>
+                <select id="teamChampSelect"><option value="">Selecione um Campeonato</option></select>
+            </div>
+        </div>
+        <div class="inline-row" style="margin-top:12px;">
+            <button type="button" onclick="criarTime()">Criar Time</button>
+            <button type="button" onclick="atualizarTime()">Atualizar Time</button>
+            <button type="button" onclick="excluirTime()">Excluir Time</button>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Cadastro / Atualização de Jogador</h2>
+        <div class="grid">
+            <div>
+                <label for="playerIdInput">ID do Jogador (para atualizar/excluir)</label>
+                <input id="playerIdInput" type="number" min="1" placeholder="ID do Jogador" />
+            </div>
+            <div>
+                <label for="playerNameInput">Nome do Jogador</label>
+                <input id="playerNameInput" type="text" placeholder="Nome do Jogador" />
+            </div>
+            <div>
+                <label for="playerAgeInput">Idade</label>
+                <input id="playerAgeInput" type="number" min="0" value="18" />
+            </div>
+            <div>
+                <label for="playerPositionInput">Posição</label>
+                <input id="playerPositionInput" type="text" placeholder="Posição" />
+            </div>
+            <div>
+                <label for="playerGoalsInput">Gols</label>
+                <input id="playerGoalsInput" type="number" min="0" value="0" />
+            </div>
+            <div>
+                <label for="playerYellowInput">Cartões Amarelos</label>
+                <input id="playerYellowInput" type="number" min="0" value="0" />
+            </div>
+            <div>
+                <label for="playerRedInput">Cartões Vermelhos</label>
+                <input id="playerRedInput" type="number" min="0" value="0" />
+            </div>
+            <div>
+                <label for="playerAssistsInput">Assistências</label>
+                <input id="playerAssistsInput" type="number" min="0" value="0" />
+            </div>
+            <div>
+                <label for="playerMatchesInput">Jogos Disputados</label>
+                <input id="playerMatchesInput" type="number" min="0" value="0" />
+            </div>
+            <div>
+                <label for="playerTeamSelect">Time</label>
+                <select id="playerTeamSelect"><option value="">Selecione um Time</option></select>
+            </div>
+        </div>
+        <div class="inline-row" style="margin-top:12px;">
+            <button type="button" onclick="criarJogador()">Criar Jogador</button>
+            <button type="button" onclick="atualizarJogador()">Atualizar Jogador</button>
+            <button type="button" onclick="excluirJogador()">Excluir Jogador</button>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Cadastro / Atualização de Partida</h2>
+        <div class="grid">
+            <div>
+                <label for="matchIdInput">ID da Partida (para atualizar/excluir)</label>
+                <input id="matchIdInput" type="number" min="1" placeholder="ID da Partida" />
+            </div>
+            <div>
+                <label for="matchHouseSelect">Time Mandante</label>
+                <select id="matchHouseSelect"><option value="">Selecione um Time</option></select>
+            </div>
+            <div>
+                <label for="matchVisitorSelect">Time Visitante</label>
+                <select id="matchVisitorSelect"><option value="">Selecione um Time</option></select>
+            </div>
+            <div>
+                <label for="matchChampSelect">Campeonato</label>
+                <select id="matchChampSelect"><option value="">Selecione um Campeonato</option></select>
+            </div>
+            <div>
+                <label for="matchHouseGoalsInput">Gols do Mandante</label>
+                <input id="matchHouseGoalsInput" type="number" min="0" value="0" />
+            </div>
+            <div>
+                <label for="matchVisitorGoalsInput">Gols do Visitante</label>
+                <input id="matchVisitorGoalsInput" type="number" min="0" value="0" />
+            </div>
+            <div>
+                <label for="matchDateInput">Data da Partida</label>
+                <input id="matchDateInput" type="date" />
+            </div>
+        </div>
+        <div class="inline-row" style="margin-top:12px;">
+            <button type="button" onclick="criarPartida()">Criar Partida</button>
+            <button type="button" onclick="atualizarPartida()">Atualizar Partida</button>
+            <button type="button" onclick="excluirPartida()">Excluir Partida</button>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Executar Procedure</h2>
+        <div class="inline-row">
+            <div>
+                <label for="computeMatchIdInput">ID da Partida</label>
+                <input id="computeMatchIdInput" type="number" min="1" placeholder="ID da Partida" />
+            </div>
+            <button type="button" onclick="executarProcedure()">Executar Procedure</button>
+        </div>
+        <p>Quando a procedure for executada, o retorno será exibido abaixo.</p>
+    </div>
+
+    <div class="section">
+        <h2>Resultado / Relatórios</h2>
+        <div id="resultado" class="result-area">Pronto. Use os botões para consultar, cadastrar ou gerar relatório.</div>
+    </div>
+
+    <script>
+        const resultado = document.getElementById('resultado');
+        const api = {
+            championships: '/api/championships',
+            teams: '/api/teams',
+            players: '/api/players',
+            matches: '/api/matches'
+        };
+        const state = { championships: [], teams: [], players: [], matches: [] };
+
+        window.addEventListener('load', () => refreshLookupData().catch(showError));
+
+        async function fetchJson(url, options) {
+            const response = await fetch(url, options);
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(`${response.status} ${response.statusText}: ${text}`);
+            }
+            return response.status === 204 ? null : response.json();
+        }
+
+        async function refreshLookupData() {
+            const [championships, teams, players, matches] = await Promise.all([
+                fetchJson(api.championships),
+                fetchJson(api.teams),
+                fetchJson(api.players),
+                fetchJson(api.matches)
+            ]);
+            state.championships = championships || [];
+            state.teams = teams || [];
+            state.players = players || [];
+            state.matches = matches || [];
+            fillSelect('teamChampSelect', state.championships, 'champId', 'name', 'Selecione um Campeonato');
+            fillSelect('matchChampSelect', state.championships, 'champId', 'name', 'Selecione um Campeonato');
+            fillSelect('playerTeamSelect', state.teams, 'teamId', 'name', 'Selecione um Time');
+            fillSelect('matchHouseSelect', state.teams, 'teamId', 'name', 'Selecione o Time Mandante');
+            fillSelect('matchVisitorSelect', state.teams, 'teamId', 'name', 'Selecione o Time Visitante');
+        }
+
+        function fillSelect(selectId, items, valueKey, labelKey, defaultText) {
+            const select = document.getElementById(selectId);
+            if (!select) return;
+            select.innerHTML = `<option value="">${defaultText}</option>`;
+            items.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item[valueKey];
+                option.textContent = item[labelKey] ?? item[valueKey];
+                select.appendChild(option);
+            });
+        }
+
+        function showMessage(html, type = 'success') {
+            resultado.innerHTML = `<div class="${type}">${html}</div>`;
+        }
+
+        function showError(error) {
+            console.error(error);
+            resultado.innerHTML = `<div class="error">Erro: ${error.message || error}</div>`;
+        }
+
+        function formatTable(items, columns) {
+            if (!items || items.length === 0) {
+                return '<div>Nenhum registro encontrado.</div>';
+            }
+            let html = '<table><thead><tr>' + columns.map(col => `<th>${col.label}</th>`).join('') + '</tr></thead><tbody>';
+            items.forEach(item => {
+                html += '<tr>' + columns.map(col => `<td>${col.value(item)}</td>`).join('') + '</tr>';
+            });
+            return html + '</tbody></table>';
+        }
+
+        async function listarCampeonatos() {
+            try {
+                const data = await fetchJson(api.championships);
+                state.championships = data || [];
+                showMessage(formatTable(state.championships, [
+                    { label: 'ID', value: item => item.champId },
+                    { label: 'Nome', value: item => item.name },
+                    { label: 'Qtd Partidas', value: item => item.matchQuantity }
+                ]), 'success');
+                await refreshLookupData();
+            } catch (error) {
+                showError(error);
+            }
+        }
+
+        async function listarTimes() {
+            try {
+                const data = await fetchJson(api.teams);
+                state.teams = data || [];
+                showMessage(formatTable(state.teams, [
+                    { label: 'ID', value: item => item.teamId },
+                    { label: 'Nome', value: item => item.name },
+                    { label: 'Pontos', value: item => item.points },
+                    { label: 'Jogos', value: item => item.matchesPlayed },
+                    { label: 'Classificação', value: item => item.classification },
+                    { label: 'Campeonato', value: item => item.championship?.name ?? '' }
+                ]), 'success');
+                await refreshLookupData();
+            } catch (error) {
+                showError(error);
+            }
+        }
+
+        async function listarJogadores() {
+            try {
+                const data = await fetchJson(api.players);
+                state.players = data || [];
+                showMessage(formatTable(state.players, [
+                    { label: 'ID', value: item => item.playerId },
+                    { label: 'Nome', value: item => item.name },
+                    { label: 'Idade', value: item => item.age },
+                    { label: 'Time', value: item => item.team },
+                    { label: 'Posição', value: item => item.position },
+                    { label: 'Gols', value: item => item.goals },
+                    { label: 'Assistências', value: item => item.assists },
+                    { label: 'Amarelos', value: item => item.yellowCard },
+                    { label: 'Vermelhos', value: item => item.redCard },
+                    { label: 'Jogos', value: item => item.matchesPlayed }
+                ]), 'success');
+            } catch (error) {
+                showError(error);
+            }
+        }
+
+        async function listarPartidas() {
+            try {
+                const data = await fetchJson(api.matches);
+                state.matches = data || [];
+                showMessage(formatTable(state.matches, [
+                    { label: 'ID', value: item => item.matchId },
+                    { label: 'Mandante', value: item => item.teamHouse },
+                    { label: 'Visitante', value: item => item.teamVisitor },
+                    { label: 'Campeonato', value: item => item.championship },
+                    { label: 'Gols Mandante', value: item => item.goalHouse },
+                    { label: 'Gols Visitante', value: item => item.goalVisitor },
+                    { label: 'Data', value: item => item.matchDate ?? '' }
+                ]), 'success');
+            } catch (error) {
+                showError(error);
+            }
+        }
+
+        async function criarCampeonato() {
+            try {
+                const body = {
+                    name: document.getElementById('champNameInput').value.trim(),
+                    matchQuantity: Number(document.getElementById('champMatchQuantityInput').value) || 0
+                };
+                await fetchJson(api.championships, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+                showMessage('Campeonato criado com sucesso.');
+                await refreshLookupData();
+                listarCampeonatos();
+            } catch (error) {
+                showError(error);
+            }
+        }
+
+        async function atualizarCampeonato() {
+            try {
+                const id = document.getElementById('champIdInput').value;
+                if (!id) throw new Error('Informe o ID do campeonato para atualizar.');
+                const body = {
+                    name: document.getElementById('champNameInput').value.trim(),
+                    matchQuantity: Number(document.getElementById('champMatchQuantityInput').value) || 0
+                };
+                await fetchJson(`${api.championships}/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+                showMessage('Campeonato atualizado com sucesso.');
+                await refreshLookupData();
+                listarCampeonatos();
+            } catch (error) {
+                showError(error);
+            }
+        }
+
+        async function excluirCampeonato() {
+            try {
+                const id = document.getElementById('champIdInput').value;
+                if (!id) throw new Error('Informe o ID do campeonato para excluir.');
+                await fetchJson(`${api.championships}/${id}`, { method: 'DELETE' });
+                showMessage('Campeonato excluído com sucesso.');
+                await refreshLookupData();
+                listarCampeonatos();
+            } catch (error) {
+                showError(error);
+            }
+        }
+
+        async function criarTime() {
+            try {
+                const championshipId = document.getElementById('teamChampSelect').value;
+                const body = {
+                    name: document.getElementById('teamNameInput').value.trim(),
+                    points: Number(document.getElementById('teamPointsInput').value) || 0,
+                    matchesPlayed: Number(document.getElementById('teamMatchesInput').value) || 0,
+                    classification: Number(document.getElementById('teamClassificationInput').value) || 0,
+                    championship: championshipId ? { champId: Number(championshipId) } : null
+                };
+                await fetchJson(api.teams, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+                showMessage('Time criado com sucesso.');
+                await refreshLookupData();
+                listarTimes();
+            } catch (error) {
+                showError(error);
+            }
+        }
+
+        async function atualizarTime() {
+            try {
+                const id = document.getElementById('teamIdInput').value;
+                if (!id) throw new Error('Informe o ID do time para atualizar.');
+                const championshipId = document.getElementById('teamChampSelect').value;
+                const body = {
+                    name: document.getElementById('teamNameInput').value.trim(),
+                    points: Number(document.getElementById('teamPointsInput').value) || 0,
+                    matchesPlayed: Number(document.getElementById('teamMatchesInput').value) || 0,
+                    classification: Number(document.getElementById('teamClassificationInput').value) || 0,
+                    championship: championshipId ? { champId: Number(championshipId) } : null
+                };
+                await fetchJson(`${api.teams}/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+                showMessage('Time atualizado com sucesso.');
+                await refreshLookupData();
+                listarTimes();
+            } catch (error) {
+                showError(error);
+            }
+        }
+
+        async function excluirTime() {
+            try {
+                const id = document.getElementById('teamIdInput').value;
+                if (!id) throw new Error('Informe o ID do time para excluir.');
+                await fetchJson(`${api.teams}/${id}`, { method: 'DELETE' });
+                showMessage('Time excluído com sucesso.');
+                await refreshLookupData();
+                listarTimes();
+            } catch (error) {
+                showError(error);
+            }
+        }
+
+        async function criarJogador() {
+            try {
+                const teamId = document.getElementById('playerTeamSelect').value;
+                const body = {
+                    name: document.getElementById('playerNameInput').value.trim(),
+                    age: Number(document.getElementById('playerAgeInput').value) || 0,
+                    team: teamId ? document.getElementById('playerTeamSelect').selectedOptions[0].text : document.getElementById('playerTeamSelect').selectedOptions[0]?.text || '',
+                    position: document.getElementById('playerPositionInput').value.trim(),
+                    goals: Number(document.getElementById('playerGoalsInput').value) || 0,
+                    yellowCard: Number(document.getElementById('playerYellowInput').value) || 0,
+                    redCard: Number(document.getElementById('playerRedInput').value) || 0,
+                    assists: Number(document.getElementById('playerAssistsInput').value) || 0,
+                    matchesPlayed: Number(document.getElementById('playerMatchesInput').value) || 0,
+                    teamEntity: teamId ? { teamId: Number(teamId) } : null
+                };
+                await fetchJson(api.players, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+                showMessage('Jogador criado com sucesso.');
+                await refreshLookupData();
+                listarJogadores();
+            } catch (error) {
+                showError(error);
+            }
+        }
+
+        async function atualizarJogador() {
+            try {
+                const id = document.getElementById('playerIdInput').value;
+                if (!id) throw new Error('Informe o ID do jogador para atualizar.');
+                const teamId = document.getElementById('playerTeamSelect').value;
+                const body = {
+                    name: document.getElementById('playerNameInput').value.trim(),
+                    age: Number(document.getElementById('playerAgeInput').value) || 0,
+                    team: teamId ? document.getElementById('playerTeamSelect').selectedOptions[0].text : document.getElementById('playerTeamSelect').selectedOptions[0]?.text || '',
+                    position: document.getElementById('playerPositionInput').value.trim(),
+                    goals: Number(document.getElementById('playerGoalsInput').value) || 0,
+                    yellowCard: Number(document.getElementById('playerYellowInput').value) || 0,
+                    redCard: Number(document.getElementById('playerRedInput').value) || 0,
+                    assists: Number(document.getElementById('playerAssistsInput').value) || 0,
+                    matchesPlayed: Number(document.getElementById('playerMatchesInput').value) || 0,
+                    teamEntity: teamId ? { teamId: Number(teamId) } : null
+                };
+                await fetchJson(`${api.players}/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+                showMessage('Jogador atualizado com sucesso.');
+                await refreshLookupData();
+                listarJogadores();
+            } catch (error) {
+                showError(error);
+            }
+        }
+
+        async function excluirJogador() {
+            try {
+                const id = document.getElementById('playerIdInput').value;
+                if (!id) throw new Error('Informe o ID do jogador para excluir.');
+                await fetchJson(`${api.players}/${id}`, { method: 'DELETE' });
+                showMessage('Jogador excluído com sucesso.');
+                await refreshLookupData();
+                listarJogadores();
+            } catch (error) {
+                showError(error);
+            }
+        }
+
+        async function criarPartida() {
+            try {
+                const houseId = document.getElementById('matchHouseSelect').value;
+                const visitorId = document.getElementById('matchVisitorSelect').value;
+                const champId = document.getElementById('matchChampSelect').value;
+                const body = {
+                    teamHouse: document.getElementById('matchHouseSelect').selectedOptions[0]?.text || '',
+                    teamVisitor: document.getElementById('matchVisitorSelect').selectedOptions[0]?.text || '',
+                    championship: document.getElementById('matchChampSelect').selectedOptions[0]?.text || '',
+                    goalHouse: Number(document.getElementById('matchHouseGoalsInput').value) || 0,
+                    goalVisitor: Number(document.getElementById('matchVisitorGoalsInput').value) || 0,
+                    matchDate: document.getElementById('matchDateInput').value || null,
+                    teamHouseEntity: houseId ? { teamId: Number(houseId) } : null,
+                    teamVisitorEntity: visitorId ? { teamId: Number(visitorId) } : null,
+                    championshipEntity: champId ? { champId: Number(champId) } : null
+                };
+                await fetchJson(api.matches, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+                showMessage('Partida criada com sucesso.');
+                await refreshLookupData();
+                listarPartidas();
+            } catch (error) {
+                showError(error);
+            }
+        }
+
+        async function atualizarPartida() {
+            try {
+                const id = document.getElementById('matchIdInput').value;
+                if (!id) throw new Error('Informe o ID da partida para atualizar.');
+                const houseId = document.getElementById('matchHouseSelect').value;
+                const visitorId = document.getElementById('matchVisitorSelect').value;
+                const champId = document.getElementById('matchChampSelect').value;
+                const body = {
+                    teamHouse: document.getElementById('matchHouseSelect').selectedOptions[0]?.text || '',
+                    teamVisitor: document.getElementById('matchVisitorSelect').selectedOptions[0]?.text || '',
+                    championship: document.getElementById('matchChampSelect').selectedOptions[0]?.text || '',
+                    goalHouse: Number(document.getElementById('matchHouseGoalsInput').value) || 0,
+                    goalVisitor: Number(document.getElementById('matchVisitorGoalsInput').value) || 0,
+                    matchDate: document.getElementById('matchDateInput').value || null,
+                    teamHouseEntity: houseId ? { teamId: Number(houseId) } : null,
+                    teamVisitorEntity: visitorId ? { teamId: Number(visitorId) } : null,
+                    championshipEntity: champId ? { champId: Number(champId) } : null
+                };
+                await fetchJson(`${api.matches}/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+                showMessage('Partida atualizada com sucesso.');
+                await refreshLookupData();
+                listarPartidas();
+            } catch (error) {
+                showError(error);
+            }
+        }
+
+        async function excluirPartida() {
+            try {
+                const id = document.getElementById('matchIdInput').value;
+                if (!id) throw new Error('Informe o ID da partida para excluir.');
+                await fetchJson(`${api.matches}/${id}`, { method: 'DELETE' });
+                showMessage('Partida excluída com sucesso.');
+                await refreshLookupData();
+                listarPartidas();
+            } catch (error) {
+                showError(error);
+            }
+        }
+
+        async function executarProcedure() {
+            try {
+                const id = document.getElementById('computeMatchIdInput').value;
+                if (!id) throw new Error('Informe o ID da partida para executar a procedure.');
+                const response = await fetch(`${api.matches}/${id}/compute`, { method: 'POST' });
+                if (!response.ok) {
+                    throw new Error(`Procedure falhou: ${response.status} ${response.statusText}`);
+                }
+                const texto = await response.text();
+                showMessage(`Procedure executada: ${texto}`);
+                await refreshLookupData();
+                listarPartidas();
+            } catch (error) {
+                showError(error);
+            }
+        }
+
+        function mostrarRelatorio() {
+            const totalChamp = state.championships.length;
+            const totalTeams = state.teams.length;
+            const totalPlayers = state.players.length;
+            const totalMatches = state.matches.length;
+            const topTeams = [...state.teams].sort((a, b) => (b.points || 0) - (a.points || 0)).slice(0, 5);
+            const topPlayers = [...state.players].sort((a, b) => (b.goals || 0) - (a.goals || 0)).slice(0, 5);
+            let html = `<strong>Total de campeonatos:</strong> ${totalChamp}\n`;
+            html += `<strong>Total de times:</strong> ${totalTeams}\n`;
+            html += `<strong>Total de jogadores:</strong> ${totalPlayers}\n`;
+            html += `<strong>Total de partidas:</strong> ${totalMatches}\n\n`;
+            html += `<strong>Top 5 Times por Pontos</strong>\n`;
+            if (topTeams.length === 0) html += 'Nenhum time disponível.\n';
+            else topTeams.forEach(team => html += `#${team.teamId} ${team.name} — ${team.points || 0} pontos\n`);
+            html += '\n<strong>Top 5 Jogadores por Gols</strong>\n';
+            if (topPlayers.length === 0) html += 'Nenhum jogador disponível.\n';
+            else topPlayers.forEach(player => html += `#${player.playerId} ${player.name} — ${player.goals || 0} gols\n`);
+            resultado.innerHTML = `<div>${html.replace(/\n/g, '<br>')}</div>`;
+        }
+    </script>
+</body>
+</html>

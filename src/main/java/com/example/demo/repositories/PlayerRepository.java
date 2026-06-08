@@ -1,10 +1,10 @@
-package com.example.demo.repositories;
+    package com.example.demo.repositories;
 
-import com.example.demo.entities.Player;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+    import com.example.demo.entities.Player;
+    import org.springframework.data.jpa.repository.JpaRepository;
+    import org.springframework.stereotype.Repository;
 
-@Repository
-public interface PlayerRepository extends JpaRepository<Player, Integer> {
-    // CRUD básico estruturado para os jogadores (usando o ID Integer do seu script)
-}
+    @Repository
+    public interface PlayerRepository extends JpaRepository<Player, Integer> {
+        // CRUD básico estruturado para os jogadores (usando o ID Integer do seu script)
+    }
